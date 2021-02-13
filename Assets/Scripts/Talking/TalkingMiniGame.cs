@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 
@@ -39,11 +40,16 @@ public class TalkingMiniGame
         Place(startingIdea, 0, 0);
     }
 
-    public void NextTurn(Idea idea, int x, int y)
+    public bool NextTurn(Idea idea, int x, int y)
     {
         if (Check(idea, x, y))
         {
-            Place(idea, x, y);
+             Place(idea, x, y);
+             return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -116,6 +122,7 @@ public class TalkingMiniGame
     
     public void Place(Idea idea, int x, int y)
     {
+        // List<Tuple<int, int>> coordinates = new List<Tuple<int, int>>();
         if (x < 0)
         {
             ExtendXGrid(true);
@@ -138,13 +145,13 @@ public class TalkingMiniGame
                     ExtendXGrid(false);
                 }
                 Debug.Log(newX+" "+ newY  + " " + i);
-                Debug.Log(gameGrid.Count);
-
-                //placing
+                Debug.Log(gameGrid.Count); //placing
                 gameGrid[newX][newY] = new IdeaSquare(idea);
             }
 
         }
-        
+
+        // return coordinates;
+
     }
 }

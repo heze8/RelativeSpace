@@ -15,10 +15,10 @@ public class ShapeEditor : Editor {
     {
         // Script.X = EditorGUILayout.IntField(3);
         // Script.Y = EditorGUILayout.IntField(3);
-        if (shape.shape == null || shape.shape.Length == 0)
-        {
-            shape.shape = new bool[9];
-        }
+        // if (shape.shape == null || shape.shape.Length == 0)
+        // {
+        //     shape.shape = new bool[9];
+        // }
         EditorGUILayout.LabelField( "Shape: ",   "shape of idea");
         EditorGUILayout.BeginHorizontal ();
         for (int y = 2; y >= 0; y--) {

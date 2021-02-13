@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
  
 ///summary
 /// Interface to play talking minigame
 ///summary
-public class TalkingInterface : MonoBehaviour
+public class TalkingInterface : Singleton<TalkingInterface>
 {
  
     #region Public Fields
@@ -24,10 +25,10 @@ public class TalkingInterface : MonoBehaviour
 	    _grid = gameObject.GetComponent<Grid>();
 		_miniGameInstance = new TalkingMiniGame();
 		_miniGameInstance.StartGame(startingIdea);
-		Display(startingIdea, 0, 0);
+		Display(startingIdea, 0, 0, ideaSprite);
     }
 
-    public void Display(Idea idea, int x, int y)
+    public void Display(Idea idea, int x, int y, GameObject ideaSprite)
     {
 	    for (int i = 0; i < 9; i++)
 	    {
@@ -40,6 +41,7 @@ public class TalkingInterface : MonoBehaviour
 		    }
 	    }
     }
+    
  
     void Update()
     {
@@ -47,8 +49,12 @@ public class TalkingInterface : MonoBehaviour
 	    {
 		    var gridPos = _grid.GetCellCenterWorld(new Vector3Int());
 		    var pos = _grid.WorldToCell(gridPos - _cam.ScreenToWorldPoint(Input.mousePosition));
-		    Debug.Log(pos);
 		    
+		    Debug.Log(pos);
+		    if (_miniGameInstance.NextTurn(startingIdea, pos.x, pos.y))
+		    {
+			    Display(startingIdea, pos.x, pos.y , ideaSprite);
+		    }
 	    }
     }
  
