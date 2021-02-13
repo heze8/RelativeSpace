@@ -29,8 +29,14 @@ public class TalkingMiniGame
         width = 0;
         height = 0;
         gameGrid = new List<List<IdeaSquare>>();
-        Place(startingIdea, 0, 0);
+        
+        for (int i = 0; i < 3; i++)
+        {           
+            ExtendYGrid();
 
+            ExtendXGrid(false);
+        }
+        Place(startingIdea, 0, 0);
     }
 
     public void NextTurn(Idea idea, int x, int y)
@@ -119,18 +125,21 @@ public class TalkingMiniGame
             if (idea.shape.shape[i])
             {
                 int newX = x + i % 3;
-                int newY = y + (int) Math.Floor((double) i / 3);
+                int newY = y + (int) Math.Floor(((double) i) / 3.0);
                 
                 //checking if out of bounds
                 if (height <= newY)
                 {
+                    ExtendYGrid();
                 }
 
                 if (width <= newX)
                 {
                     ExtendXGrid(false);
                 }
-                
+                Debug.Log(newX+" "+ newY  + " " + i);
+                Debug.Log(gameGrid.Count);
+
                 //placing
                 gameGrid[newX][newY] = new IdeaSquare(idea);
             }
