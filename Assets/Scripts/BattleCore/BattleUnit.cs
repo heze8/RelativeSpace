@@ -1,4 +1,6 @@
-﻿namespace BattleCore
+﻿using UnityEngine;
+
+namespace BattleCore
 {
     public abstract class BattleUnit : IBattleOccupant
     {
@@ -25,6 +27,12 @@
     public class BattleMap
     {
         public IBattleOccupant[,] map;
+
+        public BattleMap(Vector2Int size)
+        {
+            map = new IBattleOccupant[size.x, size.y];
+        }
+        
         public BattleUnit FindClosestEnemyUnit(BattleUnit unit)
         {
             //find closest pair of points algorithm.
