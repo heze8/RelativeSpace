@@ -24,12 +24,13 @@ public class Battle
     {
         this.battleUnits = battleUnits;
 	    _battleMap = new BattleMap(size);
+        
         foreach (var unit in battleUnits)
         {
             unit.StartBattle();
         }
 
-        
+        BattleManager.Instance.StartCoroutine(UnitActions());
     }
 
     public IEnumerator UnitActions()
@@ -41,13 +42,12 @@ public class Battle
                 unit.DoAction();
             }
             yield return new WaitForSeconds(BattleManager.Instance.tickTime);
-
         }
     }
 
     private bool HasWarEnded()
     {
-        if (hasGivenUp)
+        if (hasGivenUp || _battleMap.noValidEnemies)
         {
             return true;
         }
@@ -77,6 +77,6 @@ public class Battle
 
 public class BattleManager : Singleton<BattleManager>
 {
-    public float tickTime = 0.3f;
+    public float tickTime = 0.1f;
 
 }
