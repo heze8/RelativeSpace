@@ -31,7 +31,7 @@ namespace BattleCore
             if (enemy == null) ;
             if (map.WithinRange(this, enemy))
             {
-                Attack(enemy);
+                map.Attack(enemy);
                 
             }
             
