@@ -1,19 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using BattleCore;
 using UnityEngine;
  
 ///summary
 ///summary
-public class Battle 
+public class Battle : MonoBehaviour
 {
  
     #region Public Fields
 
+    public GameObject unitPrefab;
     private List<BattleUnit> battleUnits;
+    private List<GameObject> renderBattleUnits;
     private List<List<BattleUnit>> teams;
     private BattleMap _battleMap;
     private bool hasGivenUp;
+    private float timeSinceLast;
 
     #endregion
  
@@ -31,6 +35,48 @@ public class Battle
         }
 
         BattleManager.Instance.StartCoroutine(UnitActions());
+    }
+
+    public void Start()
+    {
+        InitRender();
+    }
+
+    private void InitRender()
+    {
+        renderBattleUnits = new List<GameObject>();
+        foreach (var unit in battleUnits)
+        {
+            var sprite = unit.GetSprite();
+            var go = Instantiate(unitPrefab, ConvertUnitPos(unit.pos), Quaternion.identity);
+            go.GetComponent<SpriteRenderer>().sprite = sprite;
+            renderBattleUnits.Add(go);
+        }
+    }
+
+    public void Update()
+    {
+        
+        RenderBattleField();
+    }
+
+    private void RenderBattleField()
+    {
+        timeSinceLast = Time.time - timeSinceLast;
+
+        for(int i = 0; i< battleUnits.Count; i++)
+        {
+            var unit = battleUnits[i];
+            var render = renderBattleUnits[i];
+
+            render.transform.position = timeSinceLast / BattleManager.Instance.tickTime *
+                                        (ConvertUnitPos(unit.pos) - render.transform.position);
+        }
+    }
+
+    private Vector3 ConvertUnitPos(Vector2Int pos)
+    {
+        return new Vector3(pos.x, pos.y);
     }
 
     public IEnumerator UnitActions()
