@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using BattleCore;
 using UnityEngine;
- 
+using Random = UnityEngine.Random;
+
 ///summary
 ///summary
 public class Battle : MonoBehaviour
@@ -31,7 +32,7 @@ public class Battle : MonoBehaviour
         
         foreach (var unit in battleUnits)
         {
-            unit.StartBattle();
+            unit.StartBattle(_battleMap);
         }
 
         BattleManager.Instance.StartCoroutine(UnitActions());
@@ -39,12 +40,19 @@ public class Battle : MonoBehaviour
 
     public void Start()
     {
+        var units = new List<BattleUnit>();
+        for (int i = 0; i < 10; i++)
+        {
+            int team = Random.value < 0.5f ? 0 : 1;
+            units.Add(ScriptableObject.CreateInstance<BasicUnit>());
+        }
         InitRender();
     }
 
     private void InitRender()
     {
         renderBattleUnits = new List<GameObject>();
+        
         foreach (var unit in battleUnits)
         {
             var sprite = unit.GetSprite();

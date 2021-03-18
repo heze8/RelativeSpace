@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BattleCore
 {
-    public abstract class BattleUnit : IBattleOccupant
+    public abstract class BattleUnit : ScriptableObject, IBattleOccupant
     {
         public Team team;
         public BattleAction action;
@@ -11,52 +11,85 @@ namespace BattleCore
         protected BattleMap map;
         public Vector2Int pos;
         public float attackRange;
-
+        public float hp;
+        public float damage;
+        public float speed;
+        public Sprite sprite;
 
         public void StartBattle(BattleMap map)
         {
             this.map = map;
         }
 
-
+        public BattleUnit(int team)
+        {
+            this.team = new Team(team);
+        }
         public abstract void DoAction();
-  
+
+        public Sprite GetSprite()
+        {
+            return sprite;
+        }
     }
+    [CreateAssetMenu]
 
     public class BasicUnit : BattleUnit
     {
+        public BasicUnit(int team) : base(team)
+        {
+        }
+
         public override void DoAction()
         {
             BattleUnit enemy = map.FindClosestEnemyUnit(this);
-            if (enemy == null) ;
+            if (enemy == null) return;
+            
             if (map.WithinRange(this, enemy))
             {
-                map.Attack(enemy);
+                action.DoAction(this, enemy);
                 
             }
-            
-            
-
+            else
+            {
+                MoveTowards(enemy);
+            }
         }
-        
+
+        private void MoveTowards(BattleUnit enemy)
+        {
+            var direc = enemy.pos - pos;
+            int movement = (int) speed;
+            movement += Random.value < (speed % 1)? 0: 1;
+            var move =   movement * direc;
+            if (move.sqrMagnitude > direc.sqrMagnitude)
+            {
+                pos = enemy.pos - new Vector2Int( (int) (direc.x / direc.magnitude), (int) (direc.y / direc.magnitude));
+            }
+            else
+            {
+                pos += move;
+            }
+        }
     }
 
-    public abstract class BattleAction
+    [System.Serializable]
+    public abstract class BattleAction 
     {
-        public abstract void DoAction(BattleUnit unit, BattleMap map);
+        public abstract void DoAction(BattleUnit unit, BattleUnit enemy);
 
     }
 
+    [System.Serializable]
     public class IdleAttack : BattleAction
     {
-        public override void DoAction(BattleUnit unit, BattleMap map)
+        public override void DoAction(BattleUnit unit, BattleUnit enemy)
         {
-            BattleUnit enemy = map.FindClosestEnemyUnit(unit);
-            if (enemy == null) ;
-            
-            
-
-
+            enemy.hp -= unit.damage;
+            if (enemy.hp <= 0)
+            {
+                enemy.isDead = true;
+            }
         }
     }
 
@@ -106,6 +139,11 @@ namespace BattleCore
     public class Team
     {
         public int teamIndex;
+
+        public Team(int team)
+        {
+            this.teamIndex = team;
+        }
 
         public bool IsEnemy(IBattleOccupant battleOccupant)
         {
