@@ -23,9 +23,10 @@ public class Battle : MonoBehaviour
     private bool warStarted;
     public BattleCore.BasicUnit basicUnit;
 
+    public GameObject attackEffect;
     #endregion
  
-
+    
     #region Private Methods
 
     public void BeginWar(Vector2Int size, List<BattleUnit> battleUnits)
@@ -84,8 +85,10 @@ public class Battle : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             int team = Random.value < 0.5f ? 0 : 1;
-            var battleUnit = Instantiate(basicUnit);
-            battleUnit.team = new Team(team); //might want to change to team manager
+            var idleAttack = new IdleAttack();
+            idleAttack.attackEffect = attackEffect;
+            var battleUnit = BattleManager.CreateBattleUnit(basicUnit, new Team(team), idleAttack);
+             //might want to change to team manager
             units.Add(battleUnit);
         }
         BeginWar(new Vector2Int(20,20), units);
@@ -100,8 +103,10 @@ public class Battle : MonoBehaviour
         foreach (var unit in battleUnits)
         {
             var sprite = unit.GetSprite();
-            var go = Instantiate(unitPrefab, ConvertUnitPos(unit.pos), Quaternion.identity, transform);
-            go.GetComponent<SpriteRenderer>().sprite = sprite;
+            var go = Instantiate(unitPrefab, BattleManager.ConvertUnitPos(unit.pos), Quaternion.identity, transform);
+            var spriteRenderer = go.GetComponent<SpriteRenderer>();
+            spriteRenderer.color = unit.team.teamIndex == 0 ? Color.red : Color.blue;
+            spriteRenderer.sprite = sprite;
             renderBattleUnits.Add(go);
         }
     }
@@ -128,30 +133,45 @@ public class Battle : MonoBehaviour
                 continue;
                 
             }
-            render.transform.position = ConvertUnitPos(unit.pos);
+
+            if (unit.directionFacing.x < 0)
+            {
+                render.transform.localScale.Set(-1, 1, 1);
+            }
+            else
+            {
+                render.transform.localScale.Set(1, 1, 1);
+
+            }
+            
+            //render.transform.eulerAngles = unit.directionFacing;
+            render.transform.position = BattleManager.ConvertUnitPos(unit.pos);
             
             //fracTickTime * (ConvertUnitPos(unit.pos) - render.transform.position);
         }
     }
 
-    private Vector3 ConvertUnitPos(Vector2Int pos)
-    {
-        return new Vector3(pos.x, 0,pos.y);
-    }
+
 
     public IEnumerator UnitActions()
     {
+
         var i = 0;
+        
         while (!HasWarEnded())
         {
             Debug.Log("tick " + i++);
+            yield return new WaitForSeconds(BattleManager.Instance.tickTime);
 
             foreach (var unit in battleUnits)
             {
+                if (unit.isDead)
+                {
+                    continue;
+                }
                 unit.BehaviourTick();
             }
-
-            yield return new WaitForSeconds(BattleManager.Instance.tickTime);
+            
         }
     }
 

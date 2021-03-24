@@ -170,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 5077170735959678692, guid: fa4969a05e4a857458d1714baf2b2dc3, type: 3}
   basicUnit: {fileID: 11400000, guid: 3982791c1b37aec418347ba51890fd93, type: 2}
+  attackEffect: {fileID: 1120295624058299116, guid: 4c7eaae86f7287c4d86a7e2093d726d2, type: 3}
 --- !u!114 &540082763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,7 +235,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.780083, y: 1}
+    m_SensorSize: {x: 1.7772926, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -250,7 +251,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907699178}
-  m_LocalRotation: {x: 0.000000059604645, y: 0.0000000013101875, z: -8.818577e-10, w: 1}
+  m_LocalRotation: {x: 0.000000059604645, y: -9.239863e-16, z: 9.033171e-16, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -406,7 +407,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112630367}
-  m_LocalRotation: {x: 0.2919009, y: 0.000000020556568, z: -0.00000000627371, w: 0.95644855}
+  m_LocalRotation: {x: 0.2919009, y: 2.813099e-31, z: -1.9727903e-31, w: 0.95644855}
   m_LocalPosition: {x: 0, y: 21, z: -22.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

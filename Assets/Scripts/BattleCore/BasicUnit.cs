@@ -8,11 +8,7 @@ namespace BattleCore
 
     public class BasicUnit : BattleUnit
     {
-        public void OnEnable()
-        {
-            action = new IdleAttack();
-        }
-
+        
         public override void BehaviourTick()
         {
             BattleUnit enemy = map.FindClosestEnemyUnit(this);
@@ -36,14 +32,20 @@ namespace BattleCore
             var direc = enemy.pos - pos;
             int movement = (int) speed;
             movement += Random.value < (speed % 1)? 0: 1;
-            var move =   movement * direc;
+            Vector2Int unitDirec = new Vector2Int(Mathf.CeilToInt(direc.x / direc.magnitude), Mathf.CeilToInt((direc.y / direc.magnitude)));
+            var move =   movement *unitDirec;
+            Debug.Log("move: " + move);
+            directionFacing = unitDirec;
             if (move.sqrMagnitude > direc.sqrMagnitude)
             {
-                pos = enemy.pos - new Vector2Int( (int) (direc.x / direc.magnitude), (int) (direc.y / direc.magnitude));
+                var vector2Int =   enemy.pos - unitDirec;
+                Debug.Log(vector2Int);
+                map.Move(this,
+                    vector2Int);
             }
             else
             {
-                pos += move;
+                map.Move(this, move);
             }
         }
     }
