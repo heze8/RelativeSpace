@@ -23,7 +23,6 @@ namespace BattleCore
             }
             else
             {
-                Debug.Log("Moving");
 
                 MoveTowards(enemy);
             }

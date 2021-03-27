@@ -15,7 +15,7 @@ public class AttackEffect : MonoBehaviour
  
     void Start()
     {
-	    timeAlive = BattleManager.Instance.tickTime;
+	    timeAlive = BattleManager.Instance.tickTime/2;
 		Destroy(gameObject, timeAlive);
     }
  
