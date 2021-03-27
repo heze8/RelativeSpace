@@ -14,10 +14,12 @@ namespace BattleCore
             BattleUnit enemy = map.FindClosestEnemyUnit(this);
             if (enemy == null) return;
             
+        
+            directionFacing = enemy.pos - pos;
+            
             if (map.WithinRange(this, enemy))
             {
                 action.DoAction(this, enemy);
-                Debug.Log("Attacking");
             }
             else
             {
@@ -29,23 +31,35 @@ namespace BattleCore
 
         private void MoveTowards(BattleUnit enemy)
         {
-            var direc = enemy.pos - pos;
-            int movement = (int) speed;
+            var direc = (Vector2) (enemy.pos - pos);
+            //Converts decimal into int using probability
+            int movement = Mathf.FloorToInt(speed);
             movement += Random.value < (speed % 1)? 0: 1;
-            Vector2Int unitDirec = new Vector2Int(Mathf.CeilToInt(direc.x / direc.magnitude), Mathf.CeilToInt((direc.y / direc.magnitude)));
-            var move =   movement *unitDirec;
-            Debug.Log("move: " + move);
-            directionFacing = unitDirec;
-            if (move.sqrMagnitude > direc.sqrMagnitude)
+            
+            //
+            
+            
+            Vector2Int unitDirec = Vector2Int.RoundToInt(direc.normalized);
+            var move =   movement * unitDirec;
+
+
+            if (move.sqrMagnitude == 0)
             {
-                var vector2Int =   enemy.pos - unitDirec;
-                Debug.Log(vector2Int);
-                map.Move(this,
+                return;
+            }
+            if (move.sqrMagnitude >= direc.sqrMagnitude)
+            {
+                var vector2Int = enemy.pos - unitDirec;
+                var canMove = map.Move(this,
                     vector2Int);
+                if (!canMove)
+                {
+                    Debug.Log("can't move "+ enemy.pos);
+                }
             }
             else
             {
-                map.Move(this, move);
+                map.Move(this, move + new Vector2Int(Random.Range(-1,2),Random.Range(-1,2)));
             }
         }
     }

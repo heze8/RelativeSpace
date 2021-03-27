@@ -24,13 +24,22 @@ public class Battle : MonoBehaviour
     public BattleCore.BasicUnit basicUnit;
 
     public GameObject attackEffect;
+    [SerializeField]
+    private bool debugMode;
+
     #endregion
  
     
     #region Private Methods
 
+    public Vector3 GetUnitPosition(BattleUnit unit)
+    {
+        return renderBattleUnits[battleUnits.IndexOf(unit)].transform.position;
+    }
+    
     public void BeginWar(Vector2Int size, List<BattleUnit> battleUnits)
     {
+        BattleManager.Instance.existingBattle = this;
         this.battleUnits = battleUnits;
 	    _battleMap = new BattleMap(size);
         
@@ -69,7 +78,7 @@ public class Battle : MonoBehaviour
                 _battleMap.map[unit.pos.x, unit.pos.y] = unit;
             }
 
-            offset += 5;
+            offset += 6;
         }
         
         
@@ -82,7 +91,7 @@ public class Battle : MonoBehaviour
     public void Start()
     {
         var units = new List<BattleUnit>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             int team = Random.value < 0.5f ? 0 : 1;
             var idleAttack = new IdleAttack();
@@ -91,7 +100,7 @@ public class Battle : MonoBehaviour
              //might want to change to team manager
             units.Add(battleUnit);
         }
-        BeginWar(new Vector2Int(20,20), units);
+        BeginWar(new Vector2Int(40,40), units);
         InitRender();
 
     }
@@ -134,18 +143,33 @@ public class Battle : MonoBehaviour
                 
             }
 
+            if (debugMode)
+            {
+                TextMesh textMesh = render.GetComponentInChildren<TextMesh>(true);
+                textMesh.gameObject.SetActive(true);
+                textMesh.text = unit.hp.ToString() + " pos: "+ unit.pos.ToString();
+                
+                if (unit.directionFacing.x < 0)
+                {
+                    textMesh.transform.localScale = new Vector3(-1, 1, 1);
+                }
+                else
+                {
+                    textMesh.transform.localScale= new Vector3(1, 1, 1);
+                }
+            }
+
             if (unit.directionFacing.x < 0)
             {
-                render.transform.localScale.Set(-1, 1, 1);
+                render.transform.localScale = new Vector3(-1, 1, 1);
             }
             else
             {
-                render.transform.localScale.Set(1, 1, 1);
-
+                render.transform.localScale= new Vector3(1, 1, 1);
             }
             
             //render.transform.eulerAngles = unit.directionFacing;
-            render.transform.position = BattleManager.ConvertUnitPos(unit.pos);
+            render.transform.position += fracTickTime * (BattleManager.ConvertUnitPos(unit.pos) - render.transform.position);
             
             //fracTickTime * (ConvertUnitPos(unit.pos) - render.transform.position);
         }

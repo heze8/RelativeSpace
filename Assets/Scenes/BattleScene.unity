@@ -171,6 +171,7 @@ MonoBehaviour:
   unitPrefab: {fileID: 5077170735959678692, guid: fa4969a05e4a857458d1714baf2b2dc3, type: 3}
   basicUnit: {fileID: 11400000, guid: 3982791c1b37aec418347ba51890fd93, type: 2}
   attackEffect: {fileID: 1120295624058299116, guid: 4c7eaae86f7287c4d86a7e2093d726d2, type: 3}
+  debugMode: 1
 --- !u!114 &540082763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tickTime: 1
+  mapScale: 2
 --- !u!4 &878930374 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5077170735959678694, guid: fa4969a05e4a857458d1714baf2b2dc3, type: 3}
@@ -235,7 +237,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7772926, y: 1}
+    m_SensorSize: {x: 1.7786885, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -251,7 +253,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907699178}
-  m_LocalRotation: {x: 0.000000059604645, y: -9.239863e-16, z: 9.033171e-16, w: 1}
+  m_LocalRotation: {x: -0.000000029802322, y: 0.00000003496451, z: -0.000000023533804, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -407,7 +409,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112630367}
-  m_LocalRotation: {x: 0.2919009, y: 2.813099e-31, z: -1.9727903e-31, w: 0.95644855}
+  m_LocalRotation: {x: 0.2919009, y: 0.000000040311296, z: -0.000000012302702, w: 0.9564486}
   m_LocalPosition: {x: 0, y: 21, z: -22.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -459,10 +461,6 @@ PrefabInstance:
     - target: {fileID: 5077170735959678692, guid: fa4969a05e4a857458d1714baf2b2dc3, type: 3}
       propertyPath: m_Name
       value: BattleUnit
-      objectReference: {fileID: 0}
-    - target: {fileID: 5077170735959678692, guid: fa4969a05e4a857458d1714baf2b2dc3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5077170735959678694, guid: fa4969a05e4a857458d1714baf2b2dc3, type: 3}
       propertyPath: m_LocalPosition.x

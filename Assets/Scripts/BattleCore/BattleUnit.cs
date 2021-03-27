@@ -57,11 +57,15 @@ namespace BattleCore
     {
         public override void DoAction(BattleUnit unit, BattleUnit enemy)
         {
-            var unitPos = BattleManager.ConvertUnitPos(unit.pos);
-            var enemyPos = BattleManager.ConvertUnitPos(enemy.pos);
-            var fromToRotation = Quaternion.FromToRotation(unitPos, enemyPos);
-            Debug.Log(fromToRotation + " " + unitPos + " " + enemyPos);
-            var attackEffectGO = BattleManager.Instantiate(attackEffect, unitPos, fromToRotation);
+            var unitPos = BattleManager.Instance.existingBattle.GetUnitPosition(unit);
+            var enemyPos = BattleManager.Instance.existingBattle.GetUnitPosition(enemy);
+            
+            var attackEffectGO = BattleManager.Instantiate(attackEffect, unitPos, Quaternion.identity);
+            // attackEffectGO.transform.LookAt(enemyPos, Vector3.down);
+            var lineRenderer = attackEffectGO.GetComponent<LineRenderer>();
+            lineRenderer.SetPosition(0, unitPos);
+            lineRenderer.SetPosition(1, enemyPos);
+
             enemy.hp -= unit.damage;
             
             if (enemy.hp <= 0)
