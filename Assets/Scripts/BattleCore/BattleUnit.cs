@@ -1,4 +1,5 @@
-﻿using BattleCore;
+﻿using System;
+using BattleCore;
 using PlayerActions;
 using UnityEngine;
 
@@ -13,18 +14,24 @@ namespace BattleCore
         protected BattleMap map;
         public Vector2Int pos;
         public float attackRange;
+        protected float baseHp;
         public float hp;
         public float damage;
         public float speed;
         public Sprite sprite;
         public Vector2 directionFacing;
-
+        //public Strategies?
         public void StartBattle(BattleMap map)
         {
             this.map = map;
             this.isDead = false;
         }
-        
+
+        public void OnEnable()
+        {
+            baseHp = hp;
+        }
+
         public abstract void BehaviourTick();
 
         public Sprite GetSprite()
@@ -136,6 +143,57 @@ namespace BattleCore
         private bool OOB(Vector2Int basicUnitPos)
         {
             return basicUnitPos.x < 0 || basicUnitPos.x > size.x || basicUnitPos.y < 0 || basicUnitPos.y > size.y;
+        }
+
+        /*
+         * Returns a value between 0 and 1 representing the density of enemies or teammates near this pos.
+         */
+        public float TeamDensity(BasicUnit b, bool returnSameTeam)
+        {
+            var pos = b.pos;
+            var team = b.team;
+            
+            var val = 0.0f;
+            for (int i = 1; i < 10; i++)
+            {
+                for (int x = -1; x < 2; x++)
+                {
+                    for (int y = -1; y < 2; y++)
+                    {
+                        if (x == 0 && y == 0) continue;
+                        var checkPos = new Vector2Int(pos.x + x * i, pos.y + y * i);
+                        if(OOB(checkPos)) continue;
+
+                        if (returnSameTeam)
+                        {
+                            if (!team.IsEnemy(Get(checkPos)))
+                            {
+                                val += (10 - i);
+                            }
+                        }
+                        else
+                        {
+                            if (team.IsEnemy(Get(checkPos)))
+                            {
+                                val += (10 - i);
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            if(val > 360) Debug.LogError("team density not working");
+            return val / 360.0f;
+        }
+
+        public IBattleOccupant Get(Vector2Int pos)
+        {
+            return map[pos.x, pos.y];
+        }
+
+        public bool AttemptRetreat(BasicUnit basicUnit)
+        {
+            throw new NotImplementedException();
         }
     }
 

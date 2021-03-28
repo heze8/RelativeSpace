@@ -8,9 +8,16 @@ namespace BattleCore
 
     public class BasicUnit : BattleUnit
     {
-        
         public override void BehaviourTick()
         {
+            var retreatChance = (baseHp - hp) / baseHp;
+            retreatChance *= retreatChance;
+            Random.InitState(this.GetHashCode());
+            var retreat = Random.value < retreatChance;
+            if (retreat && map.TeamDensity(this, false) < 0.3f && map.TeamDensity(this, true) < 0.8f)
+            {
+                map.AttemptRetreat(this);
+            }
             BattleUnit enemy = map.FindClosestEnemyUnit(this);
             if (enemy == null) return;
             
